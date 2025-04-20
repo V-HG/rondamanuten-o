@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados Enviados</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Dados Recebidos</h1>
+        <div id="dadosExibidos">
+        </div>
+        <button id="gerarWhatsappBtn">Enviar via WhatsApp</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dadosExibidosDiv = document.getElementById('dadosExibidos');
+            const gerarWhatsappBtn = document.getElementById('gerarWhatsappBtn');
+            const params = new URLSearchParams(window.location.search);
+
+            let mensagemWhatsapp = "*Ronda Manutenção:*\n";
+
+            for (const [key, value] of params.entries()) {
+                const infoGroup = document.createElement('div');
+                infoGroup.classList.add('info-group');
+                const strong = document.createElement('strong');
+                strong.textContent = `${key.replace(/campo/i, 'Campo ')}:`;
+                const span = document.createElement('span');
+                span.textContent = value;
+                infoGroup.appendChild(strong);
+                infoGroup.appendChild(span);
+                dadosExibidosDiv.appendChild(infoGroup);
+
+                mensagemWhatsapp += `*${key.replace(/campo/i, 'Campo ')}:* ${value}\n`;
+            }
+
+            gerarWhatsappBtn.addEventListener('click', function() {
+                // Remova a última quebra de linha
+                mensagemWhatsapp = mensagemWhatsapp.trimEnd();
+
+                // Codifica a mensagem para a URL
+                const mensagemCodificada = encodeURIComponent(mensagemWhatsapp);
+
+                // Número de telefone do WhatsApp (adicione o código do país e o DDD)
+                const numeroTelefone = "+5511943608532"; // Exemplo: Brasil, DDD 11, número 943608532
+
+                // Cria o link do WhatsApp
+                const linkWhatsapp = `https://wa.me/${+5511943608532}?text=${mensagemCodificada}`;
+
+                // Abre o link em uma nova janela
+                window.open(linkWhatsapp, '_blank');
+            });
+        });
+    </script>
+</body>
+</html>
